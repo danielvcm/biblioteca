@@ -1,0 +1,8 @@
+CREATE TABLE `biblioteca`.`categorias` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NOT NULL,
+  `descricao` VARCHAR(200) NULL,
+  `id_categoria_mae` INT(11) UNSIGNED NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_ctegoria_nome` (`nome` ASC) INVISIBLE,
+  INDEX `idx_categoria_id_categoria_mae` (`id_categoria_mae` ASC) VISIBLE);

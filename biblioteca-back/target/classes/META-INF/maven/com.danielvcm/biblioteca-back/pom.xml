@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.danielvcm</groupId>
-	<artifactId>biblioteca</artifactId>
+	<artifactId>biblioteca-back</artifactId>
 	<version>0.0.1</version>
 	<name>biblioteca</name>
 	<description>Organizando biblioteca da minha casa</description>
