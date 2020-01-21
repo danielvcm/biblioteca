@@ -16,6 +16,15 @@ public class ServicoCategoriaImpl implements ServicoCategoria {
 
 	public void adicionaCategoria(RequisicaoCategoria requisicaoCategoria) {
 		Categoria novaCategoria = new Categoria();
+
+		validaEAtribuiNome(requisicaoCategoria, novaCategoria);
+		atribuiDescricao(requisicaoCategoria, novaCategoria);
+		validaEAtribuiCategoriaMae(requisicaoCategoria, novaCategoria);
+
+		repositorioCategoria.save(novaCategoria);
+	}
+
+	private void validaEAtribuiNome(RequisicaoCategoria requisicaoCategoria, Categoria novaCategoria) {
 		if(requisicaoCategoria.getNome()==null || requisicaoCategoria.getNome().isBlank()) {
 			throw new RuntimeException("Nova categoria deve ter nome");
 		}
@@ -24,9 +33,15 @@ public class ServicoCategoriaImpl implements ServicoCategoria {
 			throw new RuntimeException("Já existe uma categoria com esse nome");
 		}
 		novaCategoria.setNome(requisicaoCategoria.getNome().toUpperCase());
+	}
+
+	private void atribuiDescricao(RequisicaoCategoria requisicaoCategoria, Categoria novaCategoria) {
 		if(requisicaoCategoria.getDescricao()!=null && !requisicaoCategoria.getDescricao().isBlank()){
 			novaCategoria.setDescricao(requisicaoCategoria.getDescricao());
 		}
+	}
+
+	private void validaEAtribuiCategoriaMae(RequisicaoCategoria requisicaoCategoria, Categoria novaCategoria) {
 		if(requisicaoCategoria.getCategoriaMae()!=null && !requisicaoCategoria.getCategoriaMae().isBlank()) {
 			Categoria categoriaMae = repositorioCategoria.findByNome(requisicaoCategoria.getCategoriaMae().toUpperCase());
 			if(categoriaMae == null) {
@@ -34,8 +49,6 @@ public class ServicoCategoriaImpl implements ServicoCategoria {
 			}
 			novaCategoria.setIdCategoriaMae(categoriaMae.getId());	
 		}
-		
-		repositorioCategoria.save(novaCategoria);
 	}
 
 }
