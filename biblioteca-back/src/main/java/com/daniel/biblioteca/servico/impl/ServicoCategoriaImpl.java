@@ -35,9 +35,14 @@ public class ServicoCategoriaImpl implements ServicoCategoria {
 		resposta.setCategorias(new ArrayList<>());
 		for(Categoria categoria : categorias) {
 			CategoriaResposta categoriaResposta = new CategoriaResposta();
-			categoriaResposta.setNome(categoria.getNome());
-			categoriaResposta.setDescricao(categoria.getDescricao());
-			resposta.getCategorias().add(categoriaResposta);
+			constroiResposta(categoria, categoriaResposta);
+			if(categoria.getIdCategoriaMae() == null) {
+				resposta.getCategorias().add(categoriaResposta);
+			}
+			else {
+				Boolean found =false;
+				encontraMaeEAdicionaFilhaNaLista(resposta.getCategorias(), categoria, categoriaResposta, found);
+			}
 		}
 		return resposta;
 	}
@@ -66,6 +71,34 @@ public class ServicoCategoriaImpl implements ServicoCategoria {
 				throw new RuntimeException("Categoria mãe não existe");
 			}
 			novaCategoria.setIdCategoriaMae(categoriaMae.getId());	
+		}
+	}
+
+	private void constroiResposta(Categoria categoria, CategoriaResposta categoriaResposta) {
+		categoriaResposta.setId(categoria.getId());
+		categoriaResposta.setNome(categoria.getNome());
+		categoriaResposta.setDescricao(categoria.getDescricao());
+	}
+
+	private void encontraMaeEAdicionaFilhaNaLista(List<CategoriaResposta> listaCategorias, Categoria categoria,CategoriaResposta categoriaResposta, Boolean found) {
+		for(CategoriaResposta categoriaAtual : listaCategorias) {
+			if(categoriaAtual.getId().equals(categoria.getIdCategoriaMae())) {
+				found = true;
+				if(categoriaAtual.getCategoriasFilhas() == null) {
+					categoriaAtual.setCategoriasFilhas(new ArrayList<>());
+				}
+				categoriaAtual.getCategoriasFilhas().add(categoriaResposta);
+			}
+		}
+		if(!found) {
+			for(CategoriaResposta categoriaAtual : listaCategorias) {
+				if(found) {
+					return;
+				}
+				if(categoriaAtual.getCategoriasFilhas() != null || !categoriaAtual.getCategoriasFilhas().isEmpty()) {
+					encontraMaeEAdicionaFilhaNaLista(categoriaAtual.getCategoriasFilhas(), categoria, categoriaResposta, found);
+				}
+			}
 		}
 	}
 
