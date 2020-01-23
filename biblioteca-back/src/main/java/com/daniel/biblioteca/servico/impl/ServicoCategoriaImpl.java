@@ -1,9 +1,14 @@
 package com.daniel.biblioteca.servico.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.daniel.biblioteca.json.RequisicaoCategoria;
+import com.daniel.biblioteca.json.requisicao.RequisicaoCategoria;
+import com.daniel.biblioteca.json.resposta.CategoriaResposta;
+import com.daniel.biblioteca.json.resposta.RecuperaCategoriasResposta;
 import com.daniel.biblioteca.modelo.sql.Categoria;
 import com.daniel.biblioteca.repositorio.RepositorioCategoria;
 import com.daniel.biblioteca.servico.ServicoCategoria;
@@ -22,6 +27,19 @@ public class ServicoCategoriaImpl implements ServicoCategoria {
 		validaEAtribuiCategoriaMae(requisicaoCategoria, novaCategoria);
 
 		repositorioCategoria.save(novaCategoria);
+	}
+
+	public RecuperaCategoriasResposta recuperaCategorias() {
+		List<Categoria> categorias = repositorioCategoria.findAll();
+		RecuperaCategoriasResposta resposta = new RecuperaCategoriasResposta();
+		resposta.setCategorias(new ArrayList<>());
+		for(Categoria categoria : categorias) {
+			CategoriaResposta categoriaResposta = new CategoriaResposta();
+			categoriaResposta.setNome(categoria.getNome());
+			categoriaResposta.setDescricao(categoria.getDescricao());
+			resposta.getCategorias().add(categoriaResposta);
+		}
+		return resposta;
 	}
 
 	private void validaEAtribuiNome(RequisicaoCategoria requisicaoCategoria, Categoria novaCategoria) {

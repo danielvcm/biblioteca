@@ -1,4 +1,4 @@
-package com.daniel.biblioteca.json;
+package com.daniel.biblioteca.json.requisicao;
 
 import javax.validation.constraints.NotNull;
 
